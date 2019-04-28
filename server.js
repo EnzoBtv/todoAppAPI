@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 
-mongoose.connect('mongodb://localhost:27017/todoApp', {useNewUrlParser: true});
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/todoApp', {useNewUrlParser: true});
 
 requireDir('./src/models');
 
@@ -18,6 +18,6 @@ app.use('/api',require('./src/routes'));
 
 const port = 3000;
 
-app.listen(port, function() {
+app.listen(port || process.env.PORT, function() {
     console.log(`Server listening on port ${port}`);
 });
