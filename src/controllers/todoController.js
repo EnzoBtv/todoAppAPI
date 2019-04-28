@@ -9,7 +9,7 @@ module.exports = {
     },
 
     async getTodos(req, res) {
-        const todos = await todoModel.paginate({}, {page: req.body.page, limit: 10});
+        const todos = await todoModel.find({});
         if(todos) {
             res.status(200).json(todos);
         }
@@ -28,8 +28,8 @@ module.exports = {
         }
     },
 
-    async editTodo(req, res) {
-        const edit = await todoModel.findByIdAndUpdate(req.body.todoId, req.body.todo, {new: true, upsert: true});
+    async editTodoTitle(req, res) {
+        const edit = await todoModel.findByIdAndUpdate(req.body.todoId, {'title': req.body.todo}, {new: true, upsert: true});
         if(edit) {
             res.status(200).json(edit);
         }
@@ -39,12 +39,23 @@ module.exports = {
     },
 
     async removeTodo(req, res) {
-        const remove = await todoModel.findByIdAndDelete(req.body.todoId);
+        const remove = await todoModel.findByIdAndDelete(req.params.todoId);
         if(remove) {
             res.status(200).json(remove);
         }
         else{
-            res.status(500).json({title: "Wasn't possible to get your todos"});
+            res.status(500).json({title: "Wasn't possible to delete your todos"});
+        }
+    },
+
+    async editTodoEnabled(req, res) {
+        const edit = await todoModel.findByIdAndUpdate(req.body.todoId, {'isEnabled': req.body.isEnabled}, {new: true, upsert: true});
+
+        if(edit) {
+            res.status(200).json(edit);
+        }
+        else{
+            res.status(500).json({title: "Wasn't possible to edit your todos"});
         }
     }
 }
