@@ -1,11 +1,19 @@
 const mongoose = require('mongoose');
+const _ = require('lodash');
 
 const todoModel = mongoose.model('todo.todo');
 
 module.exports = {
     async createTodo(req, res){
-        const created = await todoModel.create(req.body);
-        res.status(200).json(created);
+        const allTodos = await todoModel.find({});
+        const duplicates = _.find(allTodos, {'title': req.body.title});
+        if(!duplicates || duplicates.length > 0) {
+            const created = await todoModel.create(req.body);
+            res.status(200).json(created);
+        }
+        else{
+            res.status(500).json({title: "There's already a Todo with this name"});
+        }
     },
 
     async getTodos(req, res) {
