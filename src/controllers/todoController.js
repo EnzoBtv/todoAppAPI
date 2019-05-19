@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const todoModel = mongoose.model('todoModel');
+const todoModel = mongoose.model('todo.todo');
 
 module.exports = {
     async createTodo(req, res){
@@ -9,7 +9,7 @@ module.exports = {
     },
 
     async getTodos(req, res) {
-        const todos = await todoModel.find({});
+        const todos = await todoModel.find({'userId': req.params.userId});
         if(todos) {
             res.status(200).json(todos);
         }
@@ -29,7 +29,7 @@ module.exports = {
     },
 
     async editTodoTitle(req, res) {
-        const edit = await todoModel.findByIdAndUpdate(req.body.todoId, {'title': req.body.todo}, {new: true, upsert: true});
+        const edit = await todoModel.findOneAndUpdate({'_id': req.body.todoId, 'userId': req.body.userId}, {'title': req.body.todo}, {new: true, upsert: true});
         if(edit) {
             res.status(200).json(edit);
         }
@@ -39,7 +39,7 @@ module.exports = {
     },
 
     async removeTodo(req, res) {
-        const remove = await todoModel.findByIdAndDelete(req.params.todoId);
+        const remove = await todoModel.findOneAndDelete({'_id': req.params.todoId, 'userId': req.params.userId});
         if(remove) {
             res.status(200).json(remove);
         }
@@ -49,7 +49,7 @@ module.exports = {
     },
 
     async editTodoEnabled(req, res) {
-        const edit = await todoModel.findByIdAndUpdate(req.body.todoId, {'isEnabled': req.body.isEnabled}, {new: true, upsert: true});
+        const edit = await todoModel.findOneAndUpdate({'_id': req.body.todoId, 'userId': req.body.userId}, {'isEnabled': req.body.isEnabled}, {new: true, upsert: true});
 
         if(edit) {
             res.status(200).json(edit);
