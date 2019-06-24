@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/todoApp', {useNewUrlParser: true});
+mongoose.connect('mongodb+srv://dbUser:C5JZiSR1BaOUiRp3@cluster0-lun0k.mongodb.net/test?retryWrites=true&w=majority', {useNewUrlParser: true});
 
 requireDir('./src/models');
 
